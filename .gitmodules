@@ -1,0 +1,3 @@
+[submodule "qa-test"]
+	path = qa-test
+	url = https://github.com/zenrooms/qa-test.git

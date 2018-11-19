@@ -4,6 +4,7 @@ services:
     mysql:
       image: mysql:5.7
       container_name: mysql
+#      user: mysql #remove comment if you run with MAC and has error with docker-compose
       working_dir: /application
       environment:
         - MYSQL_ROOT_PASSWORD=homestead
@@ -15,18 +16,18 @@ services:
       ports:
         - 3306:3306
       networks:
-        cryptlock:
+        zenlock:
           ipv4_address: 172.18.0.2
 
     php-fpm:
-      build: .
+      build: phpdocker/php
       container_name: php-fpm
       working_dir: /application
       volumes:
-        - ./php-ini-overrides.ini:/etc/php/7.2/fpm/conf.d/99-overrides.ini
-        - ./application:/application
+        - ./phpdocker/php/php-ini-overrides.ini:/etc/php/7.2/fpm/conf.d/99-overrides.ini
+        - ./qa-test:/application
       networks:
-        cryptlock:
+        zenlock:
           ipv4_address: 172.18.0.5
 
     webserver:
@@ -36,12 +37,12 @@ services:
       container_name: webserver
       working_dir: /application
       volumes:
-        - ./application:/application
+        - ./qa-test:/application
       ports:
         - 8000:80
         - 8443:443
       networks:
-        cryptlock:
+        zenlock:
           ipv4_address: 172.18.0.3
 
     redis:
@@ -50,14 +51,27 @@ services:
       ports:
         - 6379:6379
       networks:
-         cryptlock:
+         zenlock:
            ipv4_address: 172.18.0.8
       volumes:
         - ./redis:/data
 
+    phpmyadmin:
+      image: phpmyadmin/phpmyadmin
+      container_name: phpmyadmin
+      ports:
+        - 8003:80
+      environment:
+        PMA_USER: homestead
+        PMA_PASSWORD: secret
+        PMA_HOST: 172.18.0.2
+      networks:
+        zenlock:
+          ipv4_address: 172.18.0.4
+
 
 networks:
-  cryptlock:
+  zenlock:
     driver: bridge
     ipam:
       config:

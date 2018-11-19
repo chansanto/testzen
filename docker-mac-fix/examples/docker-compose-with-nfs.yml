@@ -1,0 +1,7 @@
+# ../d4m-nfs.sh && docker-compose --file docker-compose-with-nfs.yml
+
+d4m-tradtional:
+  container_name: d4m-with-nfs
+  image: nginx:mainline-alpine
+  volumes:
+    - /mnt/www:/usr/share/nginx/html

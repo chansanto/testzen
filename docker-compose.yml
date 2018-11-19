@@ -1,0 +1,64 @@
+version: "3.1"
+services:
+
+    mysql:
+      image: mysql:5.7
+      container_name: mysql
+      working_dir: /application
+      environment:
+        - MYSQL_ROOT_PASSWORD=homestead
+        - MYSQL_DATABASE=homestead
+        - MYSQL_USER=homestead
+        - MYSQL_PASSWORD=secret
+      volumes:
+        - ./data:/var/lib/mysql
+      ports:
+        - 3306:3306
+      networks:
+        cryptlock:
+          ipv4_address: 172.18.0.2
+
+    php-fpm:
+      build: .
+      container_name: php-fpm
+      working_dir: /application
+      volumes:
+        - ./php-ini-overrides.ini:/etc/php/7.2/fpm/conf.d/99-overrides.ini
+        - ./application:/application
+      networks:
+        cryptlock:
+          ipv4_address: 172.18.0.5
+
+    webserver:
+      build: phpdocker/nginx
+      image: servercontainers/nginx
+      restart: always
+      container_name: webserver
+      working_dir: /application
+      volumes:
+        - ./application:/application
+      ports:
+        - 8000:80
+        - 8443:443
+      networks:
+        cryptlock:
+          ipv4_address: 172.18.0.3
+
+    redis:
+      image: redis:4.0.5-alpine
+      hostname: redis
+      ports:
+        - 6379:6379
+      networks:
+         cryptlock:
+           ipv4_address: 172.18.0.8
+      volumes:
+        - ./redis:/data
+
+
+networks:
+  cryptlock:
+    driver: bridge
+    ipam:
+      config:
+      - subnet: 172.18.0.0/24

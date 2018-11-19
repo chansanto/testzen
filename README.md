@@ -1,2 +1,2 @@
 # testzen
-just test
+ajust test

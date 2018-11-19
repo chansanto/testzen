@@ -7,6 +7,15 @@ These instructions will give you everything you need for developing CRYPTLOCK WA
 * MySQL 5.7
 * Source code (Laravel). Location: `qa-test` directory
 
+After git clone the repo https://github.com/chansanto/testzen.git.
+
+run command to update git submodule from repo zenroom qa-test
+```
+git submodule update --init --recursive
+
+```
+
+
 
 ### Prerequisites
 
